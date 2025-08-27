@@ -4,5 +4,3 @@ library(here)
 library(ARTofR)
 library(skimr)
 library(janitor)
-
-basic_data <- read_csv(here::here("data", "BasicFieldData-Streams.csv"))
