@@ -1,7 +1,23 @@
-# The task of the script is to download and clean the raw data. 
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                                                            --
+##----------- DATA MANAGMENT - DOWNLOAD, CLEAN, AND FILTER DATA ----------------
+##                                                                            --
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# Before performing the tasks, you must downloaded the entire data folder with all 4 csvs: QuebradaCuenca1-Bisley, QuebradaCuenca2-Bisley, QuebradaCuenca3-Bisley, and RioMameyesPuenteRoto. 
+# Before performing the tasks, you must downloaded the 4 csvs from the EDI Data Portal: QuebradaCuenca1-Bisley, QuebradaCuenca2-Bisley, QuebradaCuenca3-Bisley, and RioMameyesPuenteRoto. 
 
+# LINK to download raw data from EDI Data Portal: <https://portal.edirepository.org/nis/mapbrowse?packageid=knb-lter-luq.20.4923064>
+
+
+
+#                     Load libraries                         ~~~
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+library(here)
+library(janitor)
+library(tidyverse)
+library(tidyr)
+library(skimr)
+library(dplyr)
 
 
 #                   Load Data into Script                    ~~~
@@ -15,9 +31,10 @@ PRM_data <- read_csv(here("data", "RioMameyesPuenteRoto.csv"), , na = c("NA"))
 
 #    Cleaning and filtering each data set for necessarily columns       ~~~
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# To create the time series plot, the Sample_ID, Sample_Date, concentrations of NO3-N, K, Mg, Ca, NH4-N are necessary 
 BQ1_data <- BQ1_data %>% 
   select("Sample_ID", "Sample_Date", "NO3-N", "K", "Mg", "Ca", "NH4-N") %>% 
-  clean_names()
+  clean_names() # changes all the column names to follow the same syntax
 
 BQ2_data <- BQ2_data %>% 
   select("Sample_ID", "Sample_Date", "NO3-N", "K", "Mg", "Ca", "NH4-N") %>% 
@@ -30,9 +47,4 @@ BQ3_data <- BQ3_data %>%
 PRM_data <- PRM_data %>% 
   select("Sample_ID", "Sample_Date", "NO3-N", "K", "Mg", "Ca", "NH4-N") %>% 
   clean_names()
-
-
-#               merge data into one big frame                       ~~~
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-full_data <- rbind(BQ1_data, BQ2_data, BQ3_data, PRM_data)
 

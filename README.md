@@ -24,8 +24,8 @@ SCHAEFER, DOUGLAS. A.; McDOWELL, WILLIAM H.; SCATENA, FREDRICK N.; ASBURY,CLYDE 
 
 From EDI Data Portal: <https://portal.edirepository.org/nis/mapbrowse?packageid=knb-lter-luq.20.4923064>
 
-2)  Download --- from data management file
+2)  The scripts in the data management file clean and filter the data.
 
 ### Authors
 
-Megan Hessel, a graduate student at UCSB Bren's School of Environmental Science and Managment
+Megan Hessel, a graduate student at UCSB Bren's School of Environmental Science and Management
