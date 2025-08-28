@@ -11,7 +11,8 @@ SCHAEFER, DOUGLAS. A.; McDOWELL, WILLIAM H.; SCATENA, FREDRICK N.; ASBURY,CLYDE 
 -   Data: all the raw data from the project
 -   Figs: the time series plot and other illustrations
 -   Data management: scripts with data manipulation and cleaning
--   Analysis: outputs and R scripts for performing the analysis
+-   Outputs: R scripts that ... 
+-   Report: final report
 
 ### How to download and run locally:
 
@@ -23,8 +24,10 @@ SCHAEFER, DOUGLAS. A.; McDOWELL, WILLIAM H.; SCATENA, FREDRICK N.; ASBURY,CLYDE 
 -   Puente Roto Mameyes (MPR) Chemistry Data
 
 From EDI Data Portal: <https://portal.edirepository.org/nis/mapbrowse?packageid=knb-lter-luq.20.4923064>
+or from the data folder in the GitHub repository 
 
 2)  The scripts in the data management file clean and filter the data.
+3)  Run the moving average function located in the output folder 
 
 ### Authors
 
