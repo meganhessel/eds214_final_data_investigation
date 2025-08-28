@@ -132,11 +132,11 @@ PRM_data_ma <- PRM_data %>%
                      window_size_wk = 9))
 
 # saving all the new data frames in output folder 
-BQ1_data_ma <- saveRDS(BQ1_data_ma, 
-        file = "outputs", "applying_moving_avg.R")
-BQ12_data_ma <- saveRDS(BQ2_data_ma, 
-        file = "outputs", "applying_moving_avg.R")
-BQ3_data_ma <- saveRDS(BQ3_data_ma, 
-  file = "outputs", "applying_moving_avg.R")
-PRM_data_ma <- saveRDS(PRM_data_ma, 
-        file = "outputs", "applying_moving_avg.R")
+saveRDS(BQ1_data_ma, 
+        file = here("outputs", "BQ1.rds"))
+saveRDS(BQ2_data_ma, 
+        file = here("outputs", "BQ2.rds"))
+saveRDS(BQ3_data_ma, 
+        file = here("outputs", "BQ3.rds"))
+saveRDS(PRM_data_ma, 
+        file = here("outputs", "PRM.rds"))
