@@ -7,12 +7,10 @@
 # This script applies the moving average function to each site (BQ1, BQ2, BQ3, PRM) and chemical concentration (K, Mg, Ca, NO3-N, NH4-N). 
 
 
-
-# **** I HAVE DATA MISSING IN MY COLUMNS AND IDK WHATS WRONG WITH THE CODE ******
-
-
 #..... Finding the moving average for all chem concentrations in BQ1 site  .....
 #....... And creating a new column for each calculated moving average ..........
+
+#.... Finding the moving average for all chem concentrations in the BQ1 site  .....
 
 BQ1_data <- BQ1_data %>% 
   mutate(   # creates new columns in the data frame 

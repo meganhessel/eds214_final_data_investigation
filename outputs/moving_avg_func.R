@@ -1,16 +1,3 @@
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-##------ MOVING AVERAGE - creating the moving average function ----                                                                      
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-
-#               MOVING AVERAGE FUNCTION                      ~~~
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Description: To find the moving average at each date, the moving_avg_func will look at each date as the "focal date" and determine which sample dates are within the time window of interest (window_size_wk). Then, the function will calculate and output the average of the chemical concentrations within the window time frame. 
-
-
-
 #' Moving Average Function
 #'
 #' @param focal_date: Single date which would be the center of the time window.
@@ -36,7 +23,7 @@ moving_avg_func <- function(focal_date, dates, conc, window_size_wk) {
   # window_conc will accumulate the chemical concentrations associated with all sample dates in the time window  
   window_con <- conc[is_in_window]
   # Lastly, the function will produce a single numeric variable which is the mean of all concentrations in the focal date's time window. 
-  result <- mean(window_con)
+  result <- mean(window_con, na.rm = TRUE)
   return(result)
   
 }

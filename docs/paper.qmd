@@ -4,4 +4,212 @@ format: html
 editor: visual
 ---
 
-## Load Libraries
+## Background
+
+This GitHub repository reproduces the time series from:
+
+SCHAEFER, DOUGLAS. A.; McDOWELL, WILLIAM H.; SCATENA, FREDRICK N.; ASBURY,CLYDE E. 2000. Effects of hurricane disturbance on stream water concentrations and fluxes in eight tropical forest watersheds of the Luquillo Experimental Forest, Puerto Rico. Journal of Tropical Ecology 16:189±207.
+
+## Data
+
+1)  Download the 4 csv files from the data folder: QuebradaCuenca1-Bisley, QuebradaCuenca2-Bisley, QuebradaCuenca3-Bisley, and RioMameyesPuenteRoto.
+
+2)  Download libraries
+
+```{r}
+# | eval: false
+library(here)
+library(janitor)
+library(tidyverse)
+library(tidyr)
+library(skimr)
+library(dplyr)
+```
+
+3)  Clean and filter the raw data
+
+```{r}
+# Load the data into your environment  
+BQ1_data <- read_csv(here("data", "QuebradaCuenca1-Bisley.csv"), na = c("NA"))
+BQ2_data <- read_csv(here("data", "QuebradaCuenca2-Bisley.csv"), na = c("NA"))
+BQ3_data <- read_csv(here("data", "QuebradaCuenca3-Bisley.csv"), na = c("NA"))
+PRM_data <- read_csv(here("data", "RioMameyesPuenteRoto.csv"), , na = c("NA"))
+
+
+
+# Cleaning and filtering each data set for necessarily columns (which are the Sample_ID, Sample_Date, concentrations of NO3-N, K, Mg, Ca, NH4-N) 
+
+BQ1_data <- BQ1_data %>% 
+  select("Sample_ID", "Sample_Date", "NO3-N", "K", "Mg", "Ca", "NH4-N") %>% 
+  clean_names() # changes all the column names to follow the same syntax
+
+BQ2_data <- BQ2_data %>% 
+  select("Sample_ID", "Sample_Date", "NO3-N", "K", "Mg", "Ca", "NH4-N") %>% 
+  clean_names()
+
+BQ3_data <- BQ3_data %>% 
+  select("Sample_ID", "Sample_Date", "NO3-N", "K", "Mg", "Ca", "NH4-N") %>% 
+  clean_names()
+
+PRM_data <- PRM_data %>% 
+  select("Sample_ID", "Sample_Date", "NO3-N", "K", "Mg", "Ca", "NH4-N") %>% 
+  clean_names()
+
+```
+
+## Methods
+
+1)  After downloading and cleaning the data, find the moving average (ma) for all chemical concentrations (K, NO3-N, Mg, Ca, NH4-N) at each site (BQ1, BQ2, BQ3, PRM).
+
+```{r}
+
+# Use the moving average function: 
+source(here("outputs", "moving_avg_func.R"))
+```
+
+2)  Apply the moving average function to all the data sets for each chemical concentration, and create new columns for each calculated moving average in the existing data frames
+
+```{r}
+
+# (1) ma for all chem concentrations in the BQ1 site 
+
+BQ1_data <- BQ1_data %>% 
+  mutate(   # creates new columns in the data frame 
+  k_ma = sapply(sample_date,   # the function is applied to all dates in the sample dates 
+                moving_avg_func,   # using the moving average function 
+                dates = sample_date,   # looks across all sample dates to find the rows that fit the time window 
+                conc = k,   # averages the potassium concentrations 
+                window_size_wk = 9),   # takes the moving avg with a window of 9 weeks
+  no3n_ma = sapply(sample_date, 
+                   moving_avg_func, 
+                   dates = sample_date, 
+                   conc = no3_n,
+                   window_size_wk = 9), 
+  mg_ma = sapply(sample_date, 
+                 moving_avg_func, 
+                 dates = sample_date, 
+                 conc = mg,
+                 window_size_wk = 9), 
+  ca_ma = sapply(sample_date, 
+                 moving_avg_func, 
+                 dates = sample_date, 
+                 conc = ca,
+                 window_size_wk = 9), 
+  nh4n_ma = sapply(sample_date, 
+                   moving_avg_func, 
+                   dates = sample_date, 
+                   conc = nh4_n,
+                   window_size_wk = 9))
+
+
+# (2) ma for all chem concentrations in the BQ2 site 
+
+BQ2_data <- BQ2_data %>% 
+  mutate(
+    k_ma = sapply(sample_date, 
+                  moving_avg_func, 
+                  dates = sample_date, 
+                  conc = k,
+                  window_size_wk = 9),
+    no3n_ma = sapply(sample_date, 
+                     moving_avg_func, 
+                     dates = sample_date, 
+                     conc = no3_n,
+                     window_size_wk = 9), 
+    mg_ma = sapply(sample_date, 
+                   moving_avg_func, 
+                   dates = sample_date, 
+                   conc = mg,
+                   window_size_wk = 9), 
+    ca_ma = sapply(sample_date, 
+                   moving_avg_func, 
+                   dates = sample_date, 
+                   conc = ca,
+                   window_size_wk = 9), 
+    nh4n_ma = sapply(sample_date, 
+                     moving_avg_func, 
+                     dates = sample_date, 
+                     conc = nh4_n,
+                     window_size_wk = 9))
+
+# (3) ma for all chem concentrations in the BQ3 site
+
+BQ3_data <- BQ3_data %>% 
+  mutate(
+    k_ma = sapply(sample_date, 
+                  moving_avg_func, 
+                  dates = sample_date, 
+                  conc = k,
+                  window_size_wk = 9),
+    no3n_ma = sapply(sample_date, 
+                     moving_avg_func, 
+                     dates = sample_date, 
+                     conc = no3_n,
+                     window_size_wk = 9), 
+    mg_ma = sapply(sample_date, 
+                   moving_avg_func, 
+                   dates = sample_date, 
+                   conc = mg,
+                   window_size_wk = 9), 
+    ca_ma = sapply(sample_date, 
+                   moving_avg_func, 
+                   dates = sample_date, 
+                   conc = ca,
+                   window_size_wk = 9), 
+    nh4n_ma = sapply(sample_date, 
+                     moving_avg_func, 
+                     dates = sample_date, 
+                     conc = nh4_n,
+                     window_size_wk = 9))
+
+# (4) ma for all chem concentrations in the PRM site
+
+PRM_data <- PRM_data %>% 
+  mutate(
+    k_ma = sapply(sample_date, 
+                  moving_avg_func, 
+                  dates = sample_date, 
+                  conc = k,
+                  window_size_wk = 9),
+    no3n_ma = sapply(sample_date, 
+                     moving_avg_func, 
+                     dates = sample_date, 
+                     conc = no3_n,
+                     window_size_wk = 9), 
+    mg_ma = sapply(sample_date, 
+                   moving_avg_func, 
+                   dates = sample_date, 
+                   conc = mg,
+                   window_size_wk = 9), 
+    ca_ma = sapply(sample_date, 
+                   moving_avg_func, 
+                   dates = sample_date, 
+                   conc = ca,
+                   window_size_wk = 9), 
+    nh4n_ma = sapply(sample_date, 
+                     moving_avg_func, 
+                     dates = sample_date, 
+                     conc = nh4_n,
+                     window_size_wk = 9))
+```
+
+3)  Combining all the data sets
+
+```{r}
+full_data <- rbind(BQ1_data, BQ2_data, BQ3_data, PRM_data)
+
+full_long <- full_data %>% 
+  pivot_longer(cols = k_ma:nh4n_ma, 
+               names_to = "nutrients", 
+               values_to = "concentration")
+```
+
+4)  Create the plot
+
+```{r}
+
+```
+
+## Results
+
+## 

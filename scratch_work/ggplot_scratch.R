@@ -9,6 +9,19 @@
 full_data <- rbind(BQ1_data, BQ2_data, BQ3_data, PRM_data)
 
 
+#..........Creating the graphs all together   ................
+
+full_long <- full_data %>% 
+  pivot_longer(cols = k_ma:nh4n_ma, 
+               names_to = "nutrients", 
+               values_to = "concentration")
+
+ggplot(full_long, 
+       aes(x = sample_date, 
+           y = concentration, 
+           color = sample_id)) + 
+  geom_line() + 
+  facet_wrap(~nutrients)
 
 #....................Creating the individual graphs  .............................
 
@@ -53,3 +66,5 @@ nh4n_plot <- ggplot(full_data,
 
 library(patchwork) # load the library that allows plots to be on top of each other 
 time_series_plot <- (k_plot / no3n_plot / mg_plot / ca_plot / nh4n_plot)
+
+time_series_plot
