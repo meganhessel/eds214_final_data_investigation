@@ -14,7 +14,6 @@
 #'      dates = c("1990-09-12", "1992-02-11", "1990-08-20", "1990-10-01"),
 #'      conc = c(.13, 0.5, 0.67, 0.23),
 #'      window_size_wk = 9)
-
 moving_avg_func <- function(focal_date, dates, conc, window_size_wk) {
   focal_date <- as.Date(focal_date)
   # is_in_window asks what other dates in the vector are within the time window 

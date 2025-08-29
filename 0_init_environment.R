@@ -13,3 +13,13 @@ for (package in package_list) {
     install.packages(package)
   }
 }
+
+
+#                     Load libraries                         ~~~
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+library(here)
+library(janitor)
+library(tidyverse)
+library(tidyr)
+library(skimr)
+library(dplyr)

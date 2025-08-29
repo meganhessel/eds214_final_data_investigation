@@ -1,215 +1,177 @@
 ---
-title: "report"
+title: "EDS214 Final Report"
 format: html
 editor: visual
+author: Megan Hessel
+theme: cosmo
+project:
+  output-dir: ../docs
+execute: 
+  warning: false
 ---
 
 ## Background
 
-This GitHub repository reproduces the time series from:
+In 2000, Dr. Schaefer and colleagues investigated chemical fluxes in the Luquillo Experimental Forest watersheds of Puerto Rico following Hurricane Hugo. Hurricane Hugo was a distructive category 4 storm that passed through Puerto Rico on September 18, 1998 (Schaefer, McDowell, Scatena, and Asbury 2000) .
+
+This GitHub repository reproduces a similar time series plot from their work, focusing on the Bisley watershed.
 
 SCHAEFER, DOUGLAS. A.; McDOWELL, WILLIAM H.; SCATENA, FREDRICK N.; ASBURY,CLYDE E. 2000. Effects of hurricane disturbance on stream water concentrations and fluxes in eight tropical forest watersheds of the Luquillo Experimental Forest, Puerto Rico. Journal of Tropical Ecology 16:189±207.
 
 ## Data
 
-1)  Download the 4 csv files from the data folder: QuebradaCuenca1-Bisley, QuebradaCuenca2-Bisley, QuebradaCuenca3-Bisley, and RioMameyesPuenteRoto.
+Since the 1980s, stream water samples have been collected weekly at the Luquillo Experimental Forest in Puerto Rico, measuring chemical concentrations, average stream flow, pH, and more.
 
-2)  Download libraries
+All the data accumulated can be found on the EDI Data Portal: <https://portal.edirepository.org/nis/mapbrowse?packageid=knb-lter-luq.20.4923064>
 
-```{r}
-# | eval: false
-library(here)
-library(janitor)
-library(tidyverse)
-library(tidyr)
-library(skimr)
-library(dplyr)
-```
-
-3)  Clean and filter the raw data
-
-```{r}
-# Load the data into your environment  
-BQ1_data <- read_csv(here("data", "QuebradaCuenca1-Bisley.csv"), na = c("NA"))
-BQ2_data <- read_csv(here("data", "QuebradaCuenca2-Bisley.csv"), na = c("NA"))
-BQ3_data <- read_csv(here("data", "QuebradaCuenca3-Bisley.csv"), na = c("NA"))
-PRM_data <- read_csv(here("data", "RioMameyesPuenteRoto.csv"), , na = c("NA"))
-
-
-
-# Cleaning and filtering each data set for necessarily columns (which are the Sample_ID, Sample_Date, concentrations of NO3-N, K, Mg, Ca, NH4-N) 
-
-BQ1_data <- BQ1_data %>% 
-  select("Sample_ID", "Sample_Date", "NO3-N", "K", "Mg", "Ca", "NH4-N") %>% 
-  clean_names() # changes all the column names to follow the same syntax
-
-BQ2_data <- BQ2_data %>% 
-  select("Sample_ID", "Sample_Date", "NO3-N", "K", "Mg", "Ca", "NH4-N") %>% 
-  clean_names()
-
-BQ3_data <- BQ3_data %>% 
-  select("Sample_ID", "Sample_Date", "NO3-N", "K", "Mg", "Ca", "NH4-N") %>% 
-  clean_names()
-
-PRM_data <- PRM_data %>% 
-  select("Sample_ID", "Sample_Date", "NO3-N", "K", "Mg", "Ca", "NH4-N") %>% 
-  clean_names()
-
-```
+However, for replication of only Figure 3 within the paper, four csvs are required (Quebrada 1, 2, and 3-Bisley and Puente Roto Mameyes (MPR) Chemistry Data) which can be found in the EDI Data Portal or the data folder within the repository.
 
 ## Methods
 
-1)  After downloading and cleaning the data, find the moving average (ma) for all chemical concentrations (K, NO3-N, Mg, Ca, NH4-N) at each site (BQ1, BQ2, BQ3, PRM).
+\(1\) Download, clean, and filter the data.
+
+\(2\) Using the moving average function, calculate a 9 week moving average for all chemical concentrations at each site. Then combined the individual tables into a single main data frame.
 
 ```{r}
+#| code-fold: true
+#| echo: true
 
-# Use the moving average function: 
-source(here("outputs", "moving_avg_func.R"))
-```
+# Loading the cleaned and filtered data frames with the moving average calculations 
+BQ1_data_ma <- readRDS(file = here::here("outputs", "BQ1.rds")) # this is where the rds file is saved
+BQ2_data_ma <- readRDS(file = here::here("outputs", "BQ2.rds"))
+BQ3_data_ma <- readRDS(file = here::here("outputs", "BQ3.rds"))
+PRM_data_ma <- readRDS(file = here::here("outputs", "PRM.rds"))
 
-2)  Apply the moving average function to all the data sets for each chemical concentration, and create new columns for each calculated moving average in the existing data frames
-
-```{r}
-
-# (1) ma for all chem concentrations in the BQ1 site 
-
-BQ1_data <- BQ1_data %>% 
-  mutate(   # creates new columns in the data frame 
-  k_ma = sapply(sample_date,   # the function is applied to all dates in the sample dates 
-                moving_avg_func,   # using the moving average function 
-                dates = sample_date,   # looks across all sample dates to find the rows that fit the time window 
-                conc = k,   # averages the potassium concentrations 
-                window_size_wk = 9),   # takes the moving avg with a window of 9 weeks
-  no3n_ma = sapply(sample_date, 
-                   moving_avg_func, 
-                   dates = sample_date, 
-                   conc = no3_n,
-                   window_size_wk = 9), 
-  mg_ma = sapply(sample_date, 
-                 moving_avg_func, 
-                 dates = sample_date, 
-                 conc = mg,
-                 window_size_wk = 9), 
-  ca_ma = sapply(sample_date, 
-                 moving_avg_func, 
-                 dates = sample_date, 
-                 conc = ca,
-                 window_size_wk = 9), 
-  nh4n_ma = sapply(sample_date, 
-                   moving_avg_func, 
-                   dates = sample_date, 
-                   conc = nh4_n,
-                   window_size_wk = 9))
-
-
-# (2) ma for all chem concentrations in the BQ2 site 
-
-BQ2_data <- BQ2_data %>% 
-  mutate(
-    k_ma = sapply(sample_date, 
-                  moving_avg_func, 
-                  dates = sample_date, 
-                  conc = k,
-                  window_size_wk = 9),
-    no3n_ma = sapply(sample_date, 
-                     moving_avg_func, 
-                     dates = sample_date, 
-                     conc = no3_n,
-                     window_size_wk = 9), 
-    mg_ma = sapply(sample_date, 
-                   moving_avg_func, 
-                   dates = sample_date, 
-                   conc = mg,
-                   window_size_wk = 9), 
-    ca_ma = sapply(sample_date, 
-                   moving_avg_func, 
-                   dates = sample_date, 
-                   conc = ca,
-                   window_size_wk = 9), 
-    nh4n_ma = sapply(sample_date, 
-                     moving_avg_func, 
-                     dates = sample_date, 
-                     conc = nh4_n,
-                     window_size_wk = 9))
-
-# (3) ma for all chem concentrations in the BQ3 site
-
-BQ3_data <- BQ3_data %>% 
-  mutate(
-    k_ma = sapply(sample_date, 
-                  moving_avg_func, 
-                  dates = sample_date, 
-                  conc = k,
-                  window_size_wk = 9),
-    no3n_ma = sapply(sample_date, 
-                     moving_avg_func, 
-                     dates = sample_date, 
-                     conc = no3_n,
-                     window_size_wk = 9), 
-    mg_ma = sapply(sample_date, 
-                   moving_avg_func, 
-                   dates = sample_date, 
-                   conc = mg,
-                   window_size_wk = 9), 
-    ca_ma = sapply(sample_date, 
-                   moving_avg_func, 
-                   dates = sample_date, 
-                   conc = ca,
-                   window_size_wk = 9), 
-    nh4n_ma = sapply(sample_date, 
-                     moving_avg_func, 
-                     dates = sample_date, 
-                     conc = nh4_n,
-                     window_size_wk = 9))
-
-# (4) ma for all chem concentrations in the PRM site
-
-PRM_data <- PRM_data %>% 
-  mutate(
-    k_ma = sapply(sample_date, 
-                  moving_avg_func, 
-                  dates = sample_date, 
-                  conc = k,
-                  window_size_wk = 9),
-    no3n_ma = sapply(sample_date, 
-                     moving_avg_func, 
-                     dates = sample_date, 
-                     conc = no3_n,
-                     window_size_wk = 9), 
-    mg_ma = sapply(sample_date, 
-                   moving_avg_func, 
-                   dates = sample_date, 
-                   conc = mg,
-                   window_size_wk = 9), 
-    ca_ma = sapply(sample_date, 
-                   moving_avg_func, 
-                   dates = sample_date, 
-                   conc = ca,
-                   window_size_wk = 9), 
-    nh4n_ma = sapply(sample_date, 
-                     moving_avg_func, 
-                     dates = sample_date, 
-                     conc = nh4_n,
-                     window_size_wk = 9))
-```
-
-3)  Combining all the data sets
-
-```{r}
-full_data <- rbind(BQ1_data, BQ2_data, BQ3_data, PRM_data)
-
-full_long <- full_data %>% 
-  pivot_longer(cols = k_ma:nh4n_ma, 
-               names_to = "nutrients", 
-               values_to = "concentration")
-```
-
-4)  Create the plot
-
-```{r}
+# combining all the data frames together 
+full_data <- rbind(BQ1_data_ma, BQ2_data_ma, BQ3_data_ma, PRM_data_ma)
 
 ```
+
+\(4\) With all the data calculated and accumulated, create a multileveled time series plot using ggplots.
 
 ## Results
 
-## 
+The replicated time series plot shows the various chemical concentrations changing overtime at different rivers in the Bisley watershed.
+
+```{r}
+#| echo: false 
+#| fig-width: 15
+#| fig-height: 15 
+
+#download the library
+library(ggplot2)
+
+#defining the hurricane year 
+hurrican_year <- as.Date("1989-09-18")
+
+#...................Creating the individual graphs ......................
+
+# Potassium graph 
+k_plot <- ggplot(full_data, 
+                 aes (x = sample_date, 
+                      y = k_ma, 
+                      color = sample_id)) + 
+  geom_line() + 
+  theme(axis.title.x = element_blank(), 
+        axis.text.x = element_blank(), 
+        legend.position = "none", 
+        axis.text.y = element_text(size = 13), 
+        axis.title.y = element_text(size = 18), 
+        title = element_text(size = 23), 
+        plot.caption = element_text(size = 14)) +
+  geom_vline(xintercept = hurrican_year, color = "darkgrey", linetype = "dashed") +
+  labs(y = "K mg l^(-1)", 
+       title = "Chemical Concentrations in Bisley, Puerto Rico Streams", 
+       subtitle = "Before and after Hurricane Hugo", 
+       caption = "(a)") + 
+  scale_color_manual(values = c("#D8AEDDFF", "#81C14B", "#F5D000FF", "#00A6A6"))
+
+
+# NO3-N graph 
+no3n_plot <- ggplot(full_data, 
+                    aes (x = sample_date, 
+                         y = no3n_ma, 
+                         color = sample_id)) + 
+  geom_line() + 
+  theme(axis.title.x = element_blank(), 
+        axis.text.x = element_blank(), 
+        axis.text.y = element_text(size = 12), 
+        axis.title.y = element_text(size = 17), 
+        legend.text = element_text(size = 14), 
+        legend.title = element_text(size = 17), 
+        plot.caption = element_text(size = 14)) +
+  geom_vline(xintercept = hurrican_year, color = "darkgrey", linetype = "dashed") +
+  labs(y = "NO3-N ug^(-1)", 
+       color = "Streams", 
+       caption = "(b)") + 
+  scale_color_manual(values = c("#D8AEDDFF", "#81C14B", "#F5D000FF", "#00A6A6"))
+
+# Magnesium graph 
+mg_plot <- ggplot(full_data, 
+                  aes (x = sample_date, 
+                       y = mg_ma, 
+                       color = sample_id)) + 
+  geom_line() +   
+  theme(axis.title.x = element_blank(), 
+        axis.text.x = element_blank(), 
+        legend.position = "none", 
+        axis.text.y = element_text(size = 13), 
+        axis.title.y = element_text(size = 18), 
+        plot.caption = element_text(size = 14)) +
+  geom_vline(xintercept = hurrican_year, color = "darkgrey", linetype = "dashed") +
+  labs(y = "Mg mg l^(-1)", 
+       caption = "(c)") + 
+  scale_color_manual(values = c("#D8AEDDFF", "#81C14B", "#F5D000FF", "#00A6A6"))
+
+
+# Calcium graph 
+ca_plot <- ggplot(full_data, 
+                  aes (x = sample_date, 
+                       y = ca_ma, 
+                       color = sample_id)) + 
+  geom_line()+   
+  theme(axis.title.x = element_blank(), 
+        axis.text.x = element_blank(), 
+        legend.position = "none", 
+        axis.text.y = element_text(size = 13), 
+        axis.title.y = element_text(size = 18), 
+        plot.caption = element_text(size = 14)) +
+  geom_vline(xintercept = hurrican_year, color = "darkgrey", linetype = "dashed") +
+  labs(y = "Ca mg l^(-1)", 
+       caption = "(d)") + 
+  scale_color_manual(values = c("#D8AEDDFF", "#81C14B", "#F5D000FF", "#00A6A6"))
+
+
+#NH4-N graph 
+nh4n_plot <- ggplot(full_data, 
+                    aes (x = sample_date, 
+                         y = nh4n_ma, 
+                         color = sample_id)) + 
+  geom_line() + 
+  theme(axis.title.x = element_blank(), 
+        legend.position = "none", 
+        axis.text.y = element_text(size = 13), 
+        axis.title.y = element_text(size = 18), 
+        axis.text.x = element_text(size = 20), 
+        plot.caption = element_text(size = 14)) +
+  geom_vline(xintercept = hurrican_year, color = "darkgrey", linetype = "dashed") +
+  labs(y = "NH4-N ug^(-1)",
+       x = "Years",
+       caption = "(e)") + 
+  scale_color_manual(values = c("#D8AEDDFF", "#81C14B", "#F5D000FF", "#00A6A6")) 
+
+
+
+#.................. Combining the graphs .......................
+
+
+library(patchwork) # load the library that allows plots to be on top of each other 
+time_series_plot <- (k_plot / no3n_plot / mg_plot / ca_plot / nh4n_plot)
+
+time_series_plot
+
+```
+
+The chemicals included in the study are (a) potassium, (b) nitrate-N, (c) magnesium, (d) calcium, (e) ammonium-N. The various colors represent different rivers within in the watershed. Lastly, the vertical dashed-line represents Hurricane Hugo's disruption.
+
+The plot indicates that levels of potassium, nitrate-N, and magnesium increased sharply after the storm. Whereas, calcium concentrations did rise but at a more gradual rate. Due to a lack of data, ammonium-N concentration cannot be properly investigated.
