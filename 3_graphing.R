@@ -99,6 +99,7 @@ nh4n_plot <- ggplot(full_data,
 
 
 library(patchwork) # load the library that allows plots to be on top of each other 
+
 time_series_plot <- (k_plot / no3n_plot / mg_plot / ca_plot / nh4n_plot)
 
 time_series_plot
