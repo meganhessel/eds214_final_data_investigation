@@ -112,40 +112,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="data" class="level2">
 <h2 class="anchored" data-anchor-id="data">Data</h2>
 <p>Since the 1980s, stream water samples have been collected weekly at the Luquillo Experimental Forest in Puerto Rico, measuring chemical concentrations, average stream flow, pH, and more.</p>
-<p>All the data accumulated can be found on the EDI Data Portal: <a href="https://portal.edirepository.org/nis/mapbrowse?packageid=knb-lter-luq.20.4923064" class="uri">https://portal.edirepository.org/nis/mapbrowse?packageid=knb-lter-luq.20.4923064</a></p>
-<p>However, for replication of only Figure 3 within the paper, four csvs are required (Quebrada 1, 2, and 3-Bisley and Puente Roto Mameyes (MPR) Chemistry Data) which can be found in the EDI Data Portal or the data folder within the repository.</p>
+<p>All the data accumulated can be found on the <a href="https://portal.edirepository.org/nis/mapbrowse?packageid=knb-lter-luq.20.4923064">EDI Data Portal.</a></p>
+<p>However, for replication of only Figure 3 within the paper, four csvs are required (Quebrada 1, 2, and 3-Bisley and Puente Roto Mameyes (MPR) Chemistry Data) which can be found in the <a href="https://portal.edirepository.org/nis/mapbrowse?packageid=knb-lter-luq.20.4923064">EDI Data Portal</a> or the <a href="https://github.com/meganhessel/eds214_final_data_investigation/tree/main/data">data</a> folder within the GitHub repository.</p>
 </section>
 <section id="methods" class="level2">
 <h2 class="anchored" data-anchor-id="methods">Methods</h2>
 <p>(1) Download, clean, and filter the data.</p>
+<ul>
+<li>To properly replicate the time series plot, only sample id, sample date (from 1988 to 1996), and the chemical concentrations (K, NO3-N, Mg, Ca, NH4-N) are necessary.</li>
+</ul>
 <p>(2) Using the moving average function, calculate a 9 week moving average for all chemical concentrations at each site. Then combined the individual tables into a single main data frame.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Loading the cleaned and filtered data frames with the moving average calculations </span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>BQ1_data_ma <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="at">file =</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"outputs"</span>, <span class="st">"BQ1.rds"</span>)) <span class="co"># this is where the rds file is saved</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>BQ2_data_ma <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="at">file =</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"outputs"</span>, <span class="st">"BQ2.rds"</span>))</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>BQ3_data_ma <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="at">file =</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"outputs"</span>, <span class="st">"BQ3.rds"</span>))</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>PRM_data_ma <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="at">file =</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"outputs"</span>, <span class="st">"PRM.rds"</span>))</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># combining all the data frames together </span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>full_data <span class="ot">&lt;-</span> <span class="fu">rbind</span>(BQ1_data_ma, BQ2_data_ma, BQ3_data_ma, PRM_data_ma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Loading the moving average function </span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"R"</span>, <span class="st">"moving_avg_func.R"</span>))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Loading the cleaned and filtered data frames with the moving average calculations </span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>BQ1_data_ma <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="at">file =</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"outputs"</span>, <span class="st">"BQ1.rds"</span>)) <span class="co"># this is where the rds file is saved</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>BQ2_data_ma <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="at">file =</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"outputs"</span>, <span class="st">"BQ2.rds"</span>))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>BQ3_data_ma <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="at">file =</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"outputs"</span>, <span class="st">"BQ3.rds"</span>))</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>PRM_data_ma <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="at">file =</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"outputs"</span>, <span class="st">"PRM.rds"</span>))</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Combining all the data frames together </span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>full_data <span class="ot">&lt;-</span> <span class="fu">rbind</span>(BQ1_data_ma, BQ2_data_ma, BQ3_data_ma, PRM_data_ma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>(4) With all the data calculated and accumulated, create a multileveled time series plot using ggplots.</p>
+<p>(4) With all the data calculated and accumulated, create a multilevel time series plot using ggplots.</p>
 </section>
 <section id="results" class="level2">
 <h2 class="anchored" data-anchor-id="results">Results</h2>
 <p>The replicated time series plot shows the various chemical concentrations changing overtime at different rivers in the Bisley watershed.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="paper_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="1440"></p>
-</figure>
-</div>
-</div>
-</div>
+<p><img src="images/time_series_plot_BIG-01.png" class="img-fluid"></p>
 <p>The chemicals included in the study are (a) potassium, (b) nitrate-N, (c) magnesium, (d) calcium, (e) ammonium-N. The various colors represent different rivers within in the watershed. Lastly, the vertical dashed-line represents Hurricane Hugo’s disruption.</p>
 <p>The plot indicates that levels of potassium, nitrate-N, and magnesium increased sharply after the storm. Whereas, calcium concentrations did rise but at a more gradual rate. Due to a lack of data, ammonium-N concentration cannot be properly investigated.</p>
 </section>

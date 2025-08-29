@@ -85,8 +85,7 @@ nh4n_plot <- ggplot(full_data,
                          y = nh4n_ma, 
                          color = sample_id)) + 
   geom_line() + 
-  theme(axis.title.x = element_blank(), 
-        legend.position = "none", 
+  theme(legend.position = "none", 
         axis.text.y = element_text(size = 8), 
         axis.title.y = element_text(size = 11)) +
   geom_vline(xintercept = hurrican_year, color = "darkgrey", linetype = "dashed") +

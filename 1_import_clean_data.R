@@ -15,28 +15,28 @@ PRM_data <- read_csv(here("data", "RioMameyesPuenteRoto.csv"), , na = c("NA"))
 # Cleaning and filtering each data set for necessarily columns (Sample_ID, Sample_Date, concentrations of NO3-N, K, Mg, Ca, NH4-N) and for samples between 1988 to 1996 
 
 BQ1_data <- BQ1_data %>% 
-  select("Sample_ID", "Sample_Date", "NO3-N", "K", "Mg", "Ca", "NH4-N") %>% 
+  select("Sample_ID", "Sample_Date", "NO3-N", "K", "Mg", "Ca", "NH4-N") %>% # selecting necessary columns 
   mutate(year = year(Sample_Date)) %>% 
-  filter(year >= "1988" & year <= "1996") %>% 
-  clean_names()
+  filter(year >= "1988" & year <= "1995") %>% # filtering for samples between 1988-1996
+  clean_names() # making sure all the column names follow snake case 
  
 
 BQ2_data <- BQ2_data %>% 
   select("Sample_ID", "Sample_Date", "NO3-N", "K", "Mg", "Ca", "NH4-N") %>% 
   mutate(year = year(Sample_Date)) %>% 
-  filter(year >= "1988" & year <= "1996") %>% 
+  filter(year >= "1988" & year <= "1995") %>% 
   clean_names()
 
 
 BQ3_data <- BQ3_data %>% 
   select("Sample_ID", "Sample_Date", "NO3-N", "K", "Mg", "Ca", "NH4-N") %>% 
   mutate(year = year(Sample_Date)) %>% 
-  filter(year >= "1988" & year <= "1996") %>% 
+  filter(year >= "1988" & year <= "1995") %>% 
   clean_names()
 
 PRM_data <- PRM_data %>% 
   select("Sample_ID", "Sample_Date", "NO3-N", "K", "Mg", "Ca", "NH4-N") %>% 
   mutate(year = year(Sample_Date)) %>% 
-  filter(year >= "1988" & year <= "1996") %>% 
+  filter(year >= "1988" & year <= "1995") %>% 
   clean_names()
 

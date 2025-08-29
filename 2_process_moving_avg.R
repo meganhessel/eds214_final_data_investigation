@@ -1,19 +1,21 @@
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##                                                                            --
-##--------- APPLYING THE MOVING AVERAGE FUNCTION TO ALL DATA SETS --------------
+##--------- APPLYING THE MOVING AVERAGE (ma) FUNCTION TO ALL DATA SETS ---------
 ##                                                                            --
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # Applies the moving average function to the chemical concentration (K, Mg, Ca, NO3-N, NH4-N) for each site (BQ1, BQ2, BQ3, PRM) and adds the newly calculate ma into a new column. 
 
 
+# Loading the moving average function 
+source(here::here("R", "moving_avg_func.R"))
 
 
-# For the BQ1 site  
+#..........................For BQ1 Site..........................
 BQ1_data_ma <- BQ1_data %>% 
   mutate(   # creates new columns in the data frame 
-  k_ma = sapply(sample_date,   # the function is applied to all dates in the sample dates 
-                moving_avg_func,   # using the moving average function 
+  k_ma = sapply(sample_date,   # the function is applied to all sample dates
+                moving_avg_func,   # using the moving average function
                 dates = sample_date,   # looks across all sample dates to find the rows that fit the time window 
                 conc = k,   # averages the potassium concentrations 
                 window_size_wk = 9),   # takes the moving avg with a window of 9 weeks 
@@ -39,7 +41,7 @@ BQ1_data_ma <- BQ1_data %>%
                    window_size_wk = 9))
 
 
-# For the BQ2 site  
+#..........................For BQ2 Site..........................
 BQ2_data_ma <- BQ2_data %>% 
   mutate(
     k_ma = sapply(sample_date, 
@@ -68,8 +70,8 @@ BQ2_data_ma <- BQ2_data %>%
                      conc = nh4_n,
                      window_size_wk = 9))
 
-## For the BQ3 site  
 
+#..........................For BQ3 Site..........................
 BQ3_data_ma <- BQ3_data %>% 
   mutate(
     k_ma = sapply(sample_date, 
@@ -98,7 +100,7 @@ BQ3_data_ma <- BQ3_data %>%
                      conc = nh4_n,
                      window_size_wk = 9))
 
-# For the PRM site  
+#..........................For PRM Site.......................... 
 PRM_data_ma <- PRM_data %>% 
   mutate(
     k_ma = sapply(sample_date, 
@@ -126,6 +128,9 @@ PRM_data_ma <- PRM_data %>%
                      dates = sample_date, 
                      conc = nh4_n,
                      window_size_wk = 9))
+
+
+#................................................................ 
 
 # saving all the new data frames in output folder 
 saveRDS(BQ1_data_ma, 
