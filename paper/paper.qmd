@@ -32,11 +32,7 @@ However, for replication of only Figure 3 within the paper, four csvs are requir
 
 -   To properly replicate the time series plot, only sample id, sample date (from 1988 to 1996), and the chemical concentrations (K, NO3-N, Mg, Ca, NH4-N) are necessary.
 
-\(2\) Using the moving average function, calculate a 9 week moving average for all chemical concentrations at each site. The 9 week window size means that th
-
-moving average means
-
-Then combined the individual tables into a single main data frame.
+\(2\) The moving average (ma) function takes an average of the concentrations within a 9 weeks time window (4.5 weeks before and 4.5 weeks after) of each sample date. Therefore, use the moving average function, to calculate the 9 week ma for all chemical concentrations at each site. Then combined the individual tables into a single main data frame.
 
 ```{r}
 #| code-fold: true
