@@ -37,13 +37,13 @@ Flowchart and text are pretty well explaining (maybe) the process - including wh
 
 [M] Intermediate outputs are created and saved to a separate folder from raw data
 
-[M] **At least one piece of functionality has been refactored into a function in its own file**
+[E] **At least one piece of functionality has been refactored into a function in its own file**
 
 ## Document
 
 [M] The repo has a README that explains where to find (1) data, (2) analysis script, (3) supporting code, and (4) outputs
 
-[M] **The README includes a flowchart and text explaining how the analysis works**
+[E] **The README includes a flowchart and text explaining how the analysis works**
 
 [M] **The code is appropriately commented**
 
@@ -53,9 +53,10 @@ Flowchart and text are pretty well explaining (maybe) the process - including wh
 
 After cloning the repo on Workbench:
 
-[NY] Running the environment initialization script installs all required packages
+[M] Running the environment initialization script installs all required packages
 
 - `install.packages(c("here", "janitor", ...))` instead of `library` for installation not loading
+- Megan fixed it during second round of instructor feedback
 
 [M] The analysis script runs without errors
 
